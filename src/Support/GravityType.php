@@ -19,7 +19,7 @@ class GravityType
     public const SOUTH_WEST = 'sowe';
     public const CENTER = 'ce';
     
-    // Advanced gravity types
+    // Special gravity types
     public const SMART = 'sm';
     public const FOCUS_POINT = 'fp';
     
@@ -64,7 +64,7 @@ class GravityType
         array $objectWeights = []
     ) {
         if (!in_array($type, self::TYPES)) {
-            throw new InvalidArgumentException(sprintf('Invalid gravity: %s', $type));
+            throw new InvalidArgumentException(sprintf('Invalid gravity type: %s', $type));
         }
 
         $this->type = $type;
@@ -109,6 +109,14 @@ class GravityType
      */
     public function value(): string
     {
+        if ($this->type === self::SMART) {
+            return $this->type;
+        }
+        
+        if ($this->type === self::FOCUS_POINT) {
+            return sprintf('%s:%s:%s', $this->type, $this->xOffset, $this->yOffset);
+        }
+        
         if ($this->type === self::OBJECT) {
             $result = $this->type;
             if (!empty($this->objectClasses)) {
@@ -142,10 +150,6 @@ class GravityType
             }
             
             return implode(':', $result);
-        }
-        
-        if ($this->type === self::FOCUS_POINT) {
-            return sprintf('%s:%s:%s', $this->type, $this->xOffset, $this->yOffset);
         }
         
         if ($this->xOffset === 0.0 && $this->yOffset === 0.0) {

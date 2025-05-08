@@ -93,15 +93,33 @@ abstract class AbstractOption implements Stringable
      */
     public function value(): string
     {
-        $data = array_map([$this, 'formatValue'], $this->data());
-        $data = array_filter($data, function ($value) {
-            return $value !== null;
-        });
-
-        array_unshift($data, $this->name());
-
-        // Remove empty options from end.
-        return rtrim(implode(':', $data), ':');
+        $values = [];
+        $data = $this->data();
+        
+        // First value is always the option name
+        $values[] = $this->name();
+        
+        // Process the data values
+        foreach ($data as $key => $value) {
+            $formattedValue = $this->formatValue($value);
+            
+            // Add the value to our array
+            $values[] = $formattedValue;
+        }
+        
+        // Filter out null values from the end of the array
+        while (count($values) > 1 && end($values) === null) {
+            array_pop($values);
+        }
+        
+        // Replace remaining null values with empty strings to maintain positions
+        foreach ($values as &$value) {
+            if ($value === null) {
+                $value = '';
+            }
+        }
+        
+        return implode(':', $values);
     }
 
     /**

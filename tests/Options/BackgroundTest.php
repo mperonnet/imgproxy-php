@@ -12,23 +12,55 @@ class BackgroundTest extends TestCase
     /**
      * @dataProvider validData
      */
-    public function testCreate(string $color, string $expected): void
+    public function testCreate(array $colorArgs, string $expected): void
     {
-        $opt = new Background(Color::fromRgbString($color));
+        $color = $this->createColor($colorArgs);
+        $opt = new Background($color);
 
         $this->assertSame($expected, (string) $opt);
         $this->assertEquals($opt, eval('return '.var_export($opt, true).';'));
     }
 
     /**
-     * @dataProvider invalidData
+     * @dataProvider validHexData
      */
-    public function testCreateFail(string $color): void
+    public function testCreateFromHex(string $hex, string $expected): void
+    {
+        $color = Color::fromHex($hex);
+        $opt = new Background($color);
+
+        $this->assertSame($expected, (string) $opt);
+    }
+
+    /**
+     * @dataProvider validRgbStringData
+     */
+    public function testCreateFromRgbString(string $rgbString, string $expected): void
+    {
+        $color = Color::fromRgbString($rgbString);
+        $opt = new Background($color);
+
+        $this->assertSame($expected, (string) $opt);
+    }
+
+    /**
+     * @dataProvider invalidColorComponentsData
+     */
+    public function testCreateFailWithInvalidComponents(int $red, int $green, int $blue): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid color: $color");
+        new Background(new Color($red, $green, $blue));
+    }
 
-        new Background($color);
+    /**
+     * Creates a Color instance from array args
+     * 
+     * @param array $args [red, green, blue]
+     * @return Color
+     */
+    private function createColor(array $args): Color
+    {
+        return new Color($args[0], $args[1], $args[2]);
     }
 
     /**
@@ -37,7 +69,31 @@ class BackgroundTest extends TestCase
     public function validData(): array
     {
         return [
+            [[255, 204, 0], 'bg:ffcc00'],
+            [[255, 100, 255], 'bg:ff64ff'],
+            [[10, 20, 30], 'bg:0a141e'],
+        ];
+    }
+
+    /**
+     * @return array[]
+     */
+    public function validHexData(): array
+    {
+        return [
             ['FFCC00', 'bg:ffcc00'],
+            ['ff64ff', 'bg:ff64ff'],
+            ['0a141e', 'bg:0a141e'],
+        ];
+    }
+
+    /**
+     * @return array[]
+     */
+    public function validRgbStringData(): array
+    {
+        return [
+            ['255:204:0', 'bg:255:204:0'],
             ['255:100:255', 'bg:255:100:255'],
             ['10:20:30', 'bg:10:20:30'],
         ];
@@ -46,14 +102,15 @@ class BackgroundTest extends TestCase
     /**
      * @return array[]
      */
-    public function invalidData(): array
+    public function invalidColorComponentsData(): array
     {
         return [
-            ['foobar'],
-            ['-10:20:30'],
-            ['-10:-20:-30'],
-            ['100:200:300'],
-            ['256:255:100'],
+            [-10, 20, 30],
+            [10, -20, 30],
+            [10, 20, -30],
+            [256, 255, 100],
+            [100, 256, 100],
+            [100, 100, 256],
         ];
     }
 }

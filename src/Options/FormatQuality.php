@@ -19,8 +19,8 @@ final class FormatQuality extends AbstractOption
     public function __construct(array $options)
     {
         foreach ($options as $format => $quality) {
-            if ($quality < 1 || $quality > 100) {
-                throw new InvalidArgumentException(sprintf('Invalid quality: %s (should be between 1 and 100)', $quality));
+            if ($quality < 0 || $quality > 100) {
+                throw new InvalidArgumentException(sprintf('Invalid quality: %s (should be between 0 and 100)', $quality));
             }
 
             $this->options[] = [$format, $quality];
@@ -51,7 +51,7 @@ final class FormatQuality extends AbstractOption
      * Add a quality setting for a specific format.
      *
      * @param string $format Image format
-     * @param int $quality Quality value (1-100)
+     * @param int $quality Quality value (0-100)
      *
      * @return self
      */

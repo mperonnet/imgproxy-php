@@ -12,6 +12,7 @@ class Color
     private int $green;
     private int $blue;
     private ?float $alpha;
+    private string $format = 'hex'; // 'hex' or 'rgb'
 
     /**
      * @param int $red Red component (0-255)
@@ -50,15 +51,17 @@ class Color
             $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
         
-        if (strlen($hex) !== 6) {
-            throw new InvalidArgumentException(sprintf('Invalid hex color: %s', $hex));
+        if (!preg_match('/^[0-9a-fA-F]{6}$/', $hex)) {
+            throw new InvalidArgumentException(sprintf('Invalid color: %s', $hex));
         }
         
         $red = hexdec(substr($hex, 0, 2));
         $green = hexdec(substr($hex, 2, 2));
         $blue = hexdec(substr($hex, 4, 2));
         
-        return new self($red, $green, $blue, $alpha);
+        $color = new self($red, $green, $blue, $alpha);
+        $color->format = 'hex';
+        return $color;
     }
 
     /**
@@ -73,15 +76,24 @@ class Color
     {
         $rgbParts = explode(':', $rgb);
         
-        if (count($rgbParts) !== 3 || !ctype_digit(implode('', $rgbParts))) {
-            throw new InvalidArgumentException(sprintf('Invalid RGB color: %s', $rgb));
+        if (count($rgbParts) !== 3) {
+            throw new InvalidArgumentException(sprintf('Invalid color: %s', $rgb));
+        }
+        
+        // Check if each part is a valid number
+        foreach ($rgbParts as $part) {
+            if (!is_numeric($part) || $part < 0 || $part > 255) {
+                throw new InvalidArgumentException(sprintf('Invalid color: %s', $rgb));
+            }
         }
         
         $red = (int) $rgbParts[0];
         $green = (int) $rgbParts[1];
         $blue = (int) $rgbParts[2];
         
-        return new self($red, $green, $blue, $alpha);
+        $color = new self($red, $green, $blue, $alpha);
+        $color->format = 'rgb';
+        return $color;
     }
 
     /**
@@ -106,12 +118,18 @@ class Color
      */
     public static function __set_state(array $data): self
     {
-        return new self(
+        $color = new self(
             $data['red'] ?? 0,
             $data['green'] ?? 0,
             $data['blue'] ?? 0,
             $data['alpha'] ?? null
         );
+        
+        if (isset($data['format'])) {
+            $color->format = $data['format'];
+        }
+        
+        return $color;
     }
 
     /**
@@ -174,12 +192,21 @@ class Color
 
     /**
      * Returns the color value as needed for ImgProxy URLs.
-     * Prefers hex format without alpha or with alpha as a separate value.
+     * Uses the format that was specified when creating the color.
      *
      * @return string
      */
     public function value(): string
     {
+        if ($this->format === 'rgb') {
+            if ($this->alpha === null) {
+                return $this->asRgb();
+            }
+            
+            return sprintf('%s:%s', $this->asRgb(), $this->alpha);
+        }
+        
+        // Default to hex format
         if ($this->alpha === null) {
             return $this->asHex();
         }

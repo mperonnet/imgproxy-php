@@ -28,7 +28,7 @@ class GravityTest extends TestCase
     public function testCreateFail(string $type): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid gravity: $type");
+        $this->expectExceptionMessage(sprintf("Invalid gravity type: %s", $type));
 
         new Gravity($type);
     }
@@ -59,7 +59,7 @@ class GravityTest extends TestCase
     public function testCreateFailInvalidOffsetX(float $x): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid gravity X: $x");
+        $this->expectExceptionMessage(sprintf("Invalid gravity X: %s", $x));
 
         new Gravity('ce', $x);
     }
@@ -70,7 +70,7 @@ class GravityTest extends TestCase
     public function testCreateFailInvalidOffsetY(float $y): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid gravity Y: $y");
+        $this->expectExceptionMessage(sprintf("Invalid gravity Y: %s", $y));
 
         new Gravity('ce', 0, $y);
     }

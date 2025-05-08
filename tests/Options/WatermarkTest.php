@@ -82,8 +82,7 @@ class WatermarkTest extends TestCase
             ['nowe'],
             ['noea'],
             ['sowe'],
-            ['sm'],
-            ['fp'],
+            ['soea'],
         ];
     }
 

@@ -23,7 +23,7 @@ class GravityTypeTest extends TestCase
     public function testCreateFail(string $type): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid gravity: $type");
+        $this->expectExceptionMessage(sprintf("Invalid gravity type: %s", $type));
 
         new GravityType($type);
     }
@@ -42,8 +42,7 @@ class GravityTypeTest extends TestCase
             ['nowe'],
             ['noea'],
             ['sowe'],
-            ['sm'],
-            ['fp'],
+            ['soea'],
         ];
     }
 

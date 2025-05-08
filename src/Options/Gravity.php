@@ -85,6 +85,9 @@ final class Gravity extends AbstractOption
             // Parse pairs of class:weight into an associative array
             for ($i = 0; $i < count($params); $i += 2) {
                 if (isset($params[$i + 1])) {
+                    if (!is_numeric($params[$i + 1])) {
+                        throw new InvalidArgumentException(sprintf('Object weight should be numeric: %s', $params[$i + 1]));
+                    }
                     $objectWeights[$params[$i]] = (float) $params[$i + 1];
                 }
             }
@@ -93,8 +96,30 @@ final class Gravity extends AbstractOption
         }
 
         // Handle standard gravity types with optional offsets
-        $x = isset($params[0]) && is_numeric($params[0]) ? (float) $params[0] : null;
-        $y = isset($params[1]) && is_numeric($params[1]) ? (float) $params[1] : null;
+        $x = null;
+        $y = null;
+        
+        if (isset($params[0])) {
+            if (!is_numeric($params[0])) {
+                throw new InvalidArgumentException('Gravity X should be numeric');
+            }
+            $x = (float) $params[0];
+            
+            if ($x < 0) {
+                throw new InvalidArgumentException(sprintf('Invalid gravity X: %s', $x));
+            }
+        }
+        
+        if (isset($params[1])) {
+            if (!is_numeric($params[1])) {
+                throw new InvalidArgumentException('Gravity Y should be numeric');
+            }
+            $y = (float) $params[1];
+            
+            if ($y < 0) {
+                throw new InvalidArgumentException(sprintf('Invalid gravity Y: %s', $y));
+            }
+        }
 
         return new self($type, $x, $y);
     }

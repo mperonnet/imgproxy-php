@@ -54,7 +54,7 @@ class ExtendAspectRatioTest extends TestCase
     public function invalidGravityData(): array
     {
         return [
-            ['foo', 'Invalid gravity: foo'],
+            ['foo', 'Invalid gravity type: foo'],
             ['ce:bar:0', 'Gravity X should be numeric'],
             ['ce:0:baz', 'Gravity Y should be numeric'],
             ['ce:-100:0', 'Invalid gravity X: -100'],

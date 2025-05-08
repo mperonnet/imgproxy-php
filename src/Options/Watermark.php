@@ -22,7 +22,7 @@ final class Watermark extends AbstractOption
 
     /**
      * @param float $opacity Watermark opacity modifier (0-1)
-     * @param string|null $position Position of the watermark (ce, no, so, ea, we, noea, nowe, soea, sowe, re, ch)
+     * @param string|null $position Position of the watermark
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
      * @param float|null $scale Scale of the watermark relative to the resulting image (0 = no change)
@@ -66,13 +66,36 @@ final class Watermark extends AbstractOption
      */
     public function data(): array
     {
-        return [
-            $this->opacity,
-            $this->position,
-            $this->x,
-            $this->y,
-            $this->scale,
-        ];
+        $data = [$this->opacity];
+        
+        if ($this->position !== null) {
+            $data[] = $this->position;
+            
+            if ($this->x !== null) {
+                $data[] = $this->x;
+                
+                if ($this->y !== null) {
+                    $data[] = $this->y;
+                }
+            }
+        }
+        
+        if ($this->scale !== null) {
+            // Ensure all intermediary values are set if only scale is provided
+            if (count($data) === 1) {
+                $data[] = null; // position
+            }
+            if (count($data) === 2) {
+                $data[] = null; // x
+            }
+            if (count($data) === 3) {
+                $data[] = null; // y
+            }
+            
+            $data[] = $this->scale;
+        }
+        
+        return $data;
     }
 
     /**
@@ -92,6 +115,8 @@ final class Watermark extends AbstractOption
                 GravityType::SOUTH_EAST,
                 GravityType::SOUTH_WEST,
                 GravityType::CENTER,
+                GravityType::SMART,
+                GravityType::FOCUS_POINT,
             ],
             // Watermark specific positions
             [
@@ -234,6 +259,34 @@ final class Watermark extends AbstractOption
     public static function southWest(float $opacity, ?float $x = null, ?float $y = null, ?float $scale = null): self
     {
         return new self($opacity, GravityType::SOUTH_WEST, $x, $y, $scale);
+    }
+    
+    /**
+     * Create a watermark using smart gravity (content-aware positioning).
+     *
+     * @param float $opacity Watermark opacity (0-1)
+     * @param float|null $scale Scale of the watermark (0 = no change)
+     *
+     * @return self
+     */
+    public static function smart(float $opacity, ?float $scale = null): self
+    {
+        return new self($opacity, GravityType::SMART, null, null, $scale);
+    }
+    
+    /**
+     * Create a watermark at a focus point.
+     *
+     * @param float $opacity Watermark opacity (0-1)
+     * @param float $x X coordinate (0-1)
+     * @param float $y Y coordinate (0-1)
+     * @param float|null $scale Scale of the watermark (0 = no change)
+     *
+     * @return self
+     */
+    public static function focusPoint(float $opacity, float $x, float $y, ?float $scale = null): self
+    {
+        return new self($opacity, GravityType::FOCUS_POINT, $x, $y, $scale);
     }
     
     /**
