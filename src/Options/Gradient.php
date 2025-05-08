@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 
 final class Gradient extends AbstractOption
 {
@@ -14,7 +14,7 @@ final class Gradient extends AbstractOption
     public const DIRECTION_UP = 'up';
     public const DIRECTION_RIGHT = 'right';
     public const DIRECTION_LEFT = 'left';
-    
+
     private float $opacity;
     private ?string $color;
     private ?string $direction;
@@ -40,34 +40,34 @@ final class Gradient extends AbstractOption
         }
 
         $this->opacity = $opacity;
-        
+
         if ($color !== null) {
             // Validate the color (will throw InvalidArgumentException if invalid)
             Color::fromHex($color);
             $this->color = $color;
         }
-        
+
         // Validate direction
         if ($direction !== null) {
             if (is_string($direction) && !in_array($direction, $this->getDirectionTypes())) {
                 throw new InvalidArgumentException(sprintf('Invalid gradient direction: %s', $direction));
             }
-            
+
             if (is_int($direction) && ($direction < 0 || $direction > 359)) {
                 throw new InvalidArgumentException(sprintf('Invalid gradient angle: %s (should be between 0 and 359)', $direction));
             }
-            
+
             $this->direction = (string) $direction;
         }
-        
+
         if ($start !== null && ($start < 0 || $start > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid gradient start: %s (should be between 0 and 1)', $start));
         }
-        
+
         if ($stop !== null && ($stop < 0 || $stop > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid gradient stop: %s (should be between 0 and 1)', $stop));
         }
-        
+
         $this->start = $start;
         $this->stop = $stop;
     }
@@ -93,7 +93,7 @@ final class Gradient extends AbstractOption
             $this->stop,
         ];
     }
-    
+
     /**
      * @return array<string>
      */

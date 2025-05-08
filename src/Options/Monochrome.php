@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 
 final class Monochrome extends AbstractOption
 {
@@ -23,12 +23,12 @@ final class Monochrome extends AbstractOption
         }
 
         $this->intensity = $intensity;
-        
+
         if ($color !== null) {
             // Validate the color (will throw InvalidArgumentException if invalid)
             Color::fromHex($color);
         }
-        
+
         $this->color = $color;
     }
 

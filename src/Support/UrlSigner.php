@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Support;
+namespace Mperonnet\ImgProxy\Support;
 
 class UrlSigner
 {

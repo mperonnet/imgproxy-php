@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
@@ -46,27 +46,27 @@ final class VideoThumbnailTile extends AbstractOption
         if ($columns < 0) {
             throw new InvalidArgumentException(sprintf('Invalid columns: %d (should be greater than or equal to 0)', $columns));
         }
-        
+
         if ($rows < 0) {
             throw new InvalidArgumentException(sprintf('Invalid rows: %d (should be greater than or equal to 0)', $rows));
         }
-        
+
         if ($tileWidth < 0) {
             throw new InvalidArgumentException(sprintf('Invalid tile width: %d (should be greater than or equal to 0)', $tileWidth));
         }
-        
+
         if ($tileHeight < 0) {
             throw new InvalidArgumentException(sprintf('Invalid tile height: %d (should be greater than or equal to 0)', $tileHeight));
         }
-        
+
         if ($focusX !== null && ($focusX < 0 || $focusX > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid focus X: %f (should be between 0 and 1)', $focusX));
         }
-        
+
         if ($focusY !== null && ($focusY < 0 || $focusY > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid focus Y: %f (should be between 0 and 1)', $focusY));
         }
-        
+
         $this->step = $step;
         $this->columns = $columns;
         $this->rows = $rows;

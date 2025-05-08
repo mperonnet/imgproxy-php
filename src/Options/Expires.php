@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 final class Expires extends AbstractOption
 {

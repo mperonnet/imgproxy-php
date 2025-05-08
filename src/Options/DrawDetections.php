@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 final class DrawDetections extends AbstractOption
 {
     private bool $draw;
+    /**
+     * @var array<string>
+     */
     private array $classes;
 
     /**
@@ -33,11 +36,11 @@ final class DrawDetections extends AbstractOption
     public function data(): array
     {
         $result = [$this->formatBoolean($this->draw)];
-        
+
         foreach ($this->classes as $class) {
             $result[] = $class;
         }
-        
+
         return $result;
     }
 }

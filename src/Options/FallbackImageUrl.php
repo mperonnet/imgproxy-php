@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 final class FallbackImageUrl extends AbstractOption
 {
@@ -33,7 +33,7 @@ final class FallbackImageUrl extends AbstractOption
             $this->encodeUrl($this->url),
         ];
     }
-    
+
     /**
      * Encodes the URL to be used in the ImgProxy URL.
      *

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\GravityType;
+use Mperonnet\ImgProxy\Support\GravityType;
 
 final class ObjectsPosition extends AbstractOption
 {
     public const FOCUS_POINT = 'fp';
     public const PROPORTIONAL = 'prop';
-    
+
     private string $type;
     private ?float $x;
     private ?float $y;
@@ -28,20 +28,20 @@ final class ObjectsPosition extends AbstractOption
         if ($type === self::FOCUS_POINT) {
             $this->isFocusPoint = true;
             $this->type = $type;
-            
+
             if ($x === null || $y === null) {
                 throw new InvalidArgumentException('Focus point requires both X and Y coordinates');
             }
-            
+
             if ($x < 0 || $x > 1 || $y < 0 || $y > 1) {
                 throw new InvalidArgumentException('Focus point coordinates must be between 0 and 1');
             }
-            
+
             $this->x = $x;
             $this->y = $y;
             return;
         }
-        
+
         if ($type === self::PROPORTIONAL) {
             $this->isProportional = true;
             $this->type = $type;
@@ -49,7 +49,7 @@ final class ObjectsPosition extends AbstractOption
             $this->y = null;
             return;
         }
-        
+
         // For standard position types, we use the GravityType constants since they're the same
         if (!in_array($type, GravityType::TYPES) || $type === GravityType::OBJECT || $type === GravityType::OBJECT_WEIGHTED) {
             throw new InvalidArgumentException(sprintf('Invalid position type: %s', $type));
@@ -82,14 +82,14 @@ final class ObjectsPosition extends AbstractOption
         if ($type === self::FOCUS_POINT) {
             $x = isset($params[0]) && is_numeric($params[0]) ? (float) $params[0] : null;
             $y = isset($params[1]) && is_numeric($params[1]) ? (float) $params[1] : null;
-            
+
             if ($x === null || $y === null) {
                 throw new InvalidArgumentException('Focus point requires both X and Y coordinates');
             }
-            
+
             return new self($type, $x, $y);
         }
-        
+
         if ($type === self::PROPORTIONAL) {
             return new self($type);
         }
@@ -117,14 +117,14 @@ final class ObjectsPosition extends AbstractOption
         if ($this->isProportional) {
             return [$this->type];
         }
-        
+
         return [
             $this->type,
             $this->x,
             $this->y,
         ];
     }
-    
+
     /**
      * Create a north position.
      *
@@ -137,7 +137,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::NORTH, $x, $y);
     }
-    
+
     /**
      * Create a south position.
      *
@@ -150,7 +150,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::SOUTH, $x, $y);
     }
-    
+
     /**
      * Create an east position.
      *
@@ -163,7 +163,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::EAST, $x, $y);
     }
-    
+
     /**
      * Create a west position.
      *
@@ -176,7 +176,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::WEST, $x, $y);
     }
-    
+
     /**
      * Create a northeast position.
      *
@@ -189,7 +189,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::NORTH_EAST, $x, $y);
     }
-    
+
     /**
      * Create a northwest position.
      *
@@ -202,7 +202,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::NORTH_WEST, $x, $y);
     }
-    
+
     /**
      * Create a southeast position.
      *
@@ -215,7 +215,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::SOUTH_EAST, $x, $y);
     }
-    
+
     /**
      * Create a southwest position.
      *
@@ -228,7 +228,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::SOUTH_WEST, $x, $y);
     }
-    
+
     /**
      * Create a center position.
      *
@@ -241,7 +241,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(GravityType::CENTER, $x, $y);
     }
-    
+
     /**
      * Create a focus point position.
      *
@@ -254,7 +254,7 @@ final class ObjectsPosition extends AbstractOption
     {
         return new self(self::FOCUS_POINT, $x, $y);
     }
-    
+
     /**
      * Create a proportional position (object offsets in the result image are proportional
      * to their offsets in the original image).

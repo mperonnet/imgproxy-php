@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
 final class BlurDetections extends AbstractOption
 {
     private float $sigma;
+    /**
+     * @var array<string>
+     */
     private array $classes;
 
     /**
@@ -39,11 +42,11 @@ final class BlurDetections extends AbstractOption
     public function data(): array
     {
         $result = [$this->sigma];
-        
+
         foreach ($this->classes as $class) {
             $result[] = $class;
         }
-        
+
         return $result;
     }
 }

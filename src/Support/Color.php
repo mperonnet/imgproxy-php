@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Support;
+namespace Mperonnet\ImgProxy\Support;
 
 use InvalidArgumentException;
 
@@ -23,11 +23,11 @@ class Color
     public function __construct(int $red, int $green, int $blue, ?float $alpha = null)
     {
         $this->validateRgb($red, $green, $blue);
-        
+
         if ($alpha !== null) {
             $this->validateAlpha($alpha);
         }
-        
+
         $this->red = $red;
         $this->green = $green;
         $this->blue = $blue;
@@ -45,20 +45,21 @@ class Color
     public static function fromHex(string $hex, ?float $alpha = null): self
     {
         $hex = ltrim($hex, '#');
-        
+
         if (strlen($hex) === 3) {
             // Convert shorthand hex to full hex
             $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
-        
+
         if (!preg_match('/^[0-9a-fA-F]{6}$/', $hex)) {
             throw new InvalidArgumentException(sprintf('Invalid color: %s', $hex));
         }
-        
-        $red = hexdec(substr($hex, 0, 2));
-        $green = hexdec(substr($hex, 2, 2));
-        $blue = hexdec(substr($hex, 4, 2));
-        
+
+        // Explicitly cast to int as hexdec can return int or float
+        $red = (int) hexdec(substr($hex, 0, 2));
+        $green = (int) hexdec(substr($hex, 2, 2));
+        $blue = (int) hexdec(substr($hex, 4, 2));
+
         $color = new self($red, $green, $blue, $alpha);
         $color->format = 'hex';
         return $color;
@@ -75,22 +76,23 @@ class Color
     public static function fromRgbString(string $rgb, ?float $alpha = null): self
     {
         $rgbParts = explode(':', $rgb);
-        
+
         if (count($rgbParts) !== 3) {
             throw new InvalidArgumentException(sprintf('Invalid color: %s', $rgb));
         }
-        
+
         // Check if each part is a valid number
         foreach ($rgbParts as $part) {
             if (!is_numeric($part) || $part < 0 || $part > 255) {
                 throw new InvalidArgumentException(sprintf('Invalid color: %s', $rgb));
             }
         }
-        
+
+        // Convert to integers to ensure type safety
         $red = (int) $rgbParts[0];
         $green = (int) $rgbParts[1];
         $blue = (int) $rgbParts[2];
-        
+
         $color = new self($red, $green, $blue, $alpha);
         $color->format = 'rgb';
         return $color;
@@ -124,11 +126,11 @@ class Color
             $data['blue'] ?? 0,
             $data['alpha'] ?? null
         );
-        
+
         if (isset($data['format'])) {
             $color->format = $data['format'];
         }
-        
+
         return $color;
     }
 
@@ -146,11 +148,11 @@ class Color
         if ($red < 0 || $red > 255) {
             throw new InvalidArgumentException(sprintf('Invalid red component: %d', $red));
         }
-        
+
         if ($green < 0 || $green > 255) {
             throw new InvalidArgumentException(sprintf('Invalid green component: %d', $green));
         }
-        
+
         if ($blue < 0 || $blue > 255) {
             throw new InvalidArgumentException(sprintf('Invalid blue component: %d', $blue));
         }
@@ -202,15 +204,15 @@ class Color
             if ($this->alpha === null) {
                 return $this->asRgb();
             }
-            
+
             return sprintf('%s:%s', $this->asRgb(), $this->alpha);
         }
-        
+
         // Default to hex format
         if ($this->alpha === null) {
             return $this->asHex();
         }
-        
+
         return sprintf('%s:%s', $this->asHex(), $this->alpha);
     }
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
-use Onliner\ImgProxy\Support\GravityType;
+use Mperonnet\ImgProxy\Support\GravityType;
 use PHPUnit\Framework\TestCase;
 
 class ExtendTest extends TestCase

@@ -2,17 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\GravityType;
+use Mperonnet\ImgProxy\Support\GravityType;
 
 final class Gravity extends AbstractOption
 {
     private string $type;
     private ?float $x;
     private ?float $y;
+    /**
+     * @var array<string>
+     */
     private array $objectClasses = [];
+    /**
+     * @var array<string, float|int>
+     */
     private array $objectWeights = [];
 
     /**
@@ -31,7 +37,7 @@ final class Gravity extends AbstractOption
     ) {
         if ($type instanceof GravityType) {
             $this->type = $type->value();
-            
+
             // If we have a GravityType object we don't need to validate the other parameters
             // since they are validated by the GravityType constructor.
             $this->x = $x;
@@ -81,7 +87,7 @@ final class Gravity extends AbstractOption
 
         if ($type === GravityType::OBJECT_WEIGHTED) {
             $objectWeights = [];
-            
+
             // Parse pairs of class:weight into an associative array
             for ($i = 0; $i < count($params); $i += 2) {
                 if (isset($params[$i + 1])) {
@@ -91,31 +97,31 @@ final class Gravity extends AbstractOption
                     $objectWeights[$params[$i]] = (float) $params[$i + 1];
                 }
             }
-            
+
             return new self($type, null, null, [], $objectWeights);
         }
 
         // Handle standard gravity types with optional offsets
         $x = null;
         $y = null;
-        
+
         if (isset($params[0])) {
             if (!is_numeric($params[0])) {
                 throw new InvalidArgumentException('Gravity X should be numeric');
             }
             $x = (float) $params[0];
-            
+
             if ($x < 0) {
                 throw new InvalidArgumentException(sprintf('Invalid gravity X: %s', $x));
             }
         }
-        
+
         if (isset($params[1])) {
             if (!is_numeric($params[1])) {
                 throw new InvalidArgumentException('Gravity Y should be numeric');
             }
             $y = (float) $params[1];
-            
+
             if ($y < 0) {
                 throw new InvalidArgumentException(sprintf('Invalid gravity Y: %s', $y));
             }
@@ -140,26 +146,26 @@ final class Gravity extends AbstractOption
         // Object oriented gravity
         if ($this->type === GravityType::OBJECT) {
             $result = [$this->type];
-            
+
             foreach ($this->objectClasses as $class) {
                 $result[] = $class;
             }
-            
+
             return $result;
         }
-        
+
         // Weighted object oriented gravity
         if ($this->type === GravityType::OBJECT_WEIGHTED) {
             $result = [$this->type];
-            
+
             foreach ($this->objectWeights as $class => $weight) {
                 $result[] = $class;
                 $result[] = $weight;
             }
-            
+
             return $result;
         }
-        
+
         // Standard gravity with optional offsets
         return [
             $this->type,
@@ -167,7 +173,7 @@ final class Gravity extends AbstractOption
             $this->y,
         ];
     }
-    
+
     /**
      * Create a north gravity.
      *
@@ -180,7 +186,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::NORTH, $x, $y);
     }
-    
+
     /**
      * Create a south gravity.
      *
@@ -193,7 +199,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::SOUTH, $x, $y);
     }
-    
+
     /**
      * Create an east gravity.
      *
@@ -206,7 +212,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::EAST, $x, $y);
     }
-    
+
     /**
      * Create a west gravity.
      *
@@ -219,7 +225,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::WEST, $x, $y);
     }
-    
+
     /**
      * Create a northeast gravity.
      *
@@ -232,7 +238,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::NORTH_EAST, $x, $y);
     }
-    
+
     /**
      * Create a northwest gravity.
      *
@@ -245,7 +251,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::NORTH_WEST, $x, $y);
     }
-    
+
     /**
      * Create a southeast gravity.
      *
@@ -258,7 +264,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::SOUTH_EAST, $x, $y);
     }
-    
+
     /**
      * Create a southwest gravity.
      *
@@ -271,7 +277,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::SOUTH_WEST, $x, $y);
     }
-    
+
     /**
      * Create a center gravity.
      *
@@ -284,7 +290,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::CENTER, $x, $y);
     }
-    
+
     /**
      * Create a smart gravity (using image content detection).
      *
@@ -294,7 +300,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::SMART);
     }
-    
+
     /**
      * Create a focus point gravity.
      *
@@ -307,7 +313,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::FOCUS_POINT, $x, $y);
     }
-    
+
     /**
      * Create an object-detection based gravity (Pro feature).
      *
@@ -319,7 +325,7 @@ final class Gravity extends AbstractOption
     {
         return new self(GravityType::OBJECT, null, null, $objectClasses);
     }
-    
+
     /**
      * Create a weighted object-detection based gravity (Pro feature).
      *

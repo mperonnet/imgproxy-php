@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy;
+namespace Mperonnet\ImgProxy;
 
-use Onliner\ImgProxy\Options\AbstractOption;
-use Onliner\ImgProxy\Options\Dpr;
-use Onliner\ImgProxy\Options\Height;
-use Onliner\ImgProxy\Options\Resize;
-use Onliner\ImgProxy\Options\ResizingType;
-use Onliner\ImgProxy\Options\Width;
+use Mperonnet\ImgProxy\Options\AbstractOption;
+use Mperonnet\ImgProxy\Options\Dpr;
+use Mperonnet\ImgProxy\Options\Height;
+use Mperonnet\ImgProxy\Options\Resize;
+use Mperonnet\ImgProxy\Options\ResizingType;
+use Mperonnet\ImgProxy\Options\Width;
 use PHPUnit\Framework\TestCase;
 
 class UrlBuilderTest extends TestCase

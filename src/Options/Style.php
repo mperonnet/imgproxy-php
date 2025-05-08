@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 final class Style extends AbstractOption
 {
@@ -33,7 +33,7 @@ final class Style extends AbstractOption
             $this->encodeStyle($this->style),
         ];
     }
-    
+
     /**
      * Encodes the CSS styles to be used in the ImgProxy URL.
      *

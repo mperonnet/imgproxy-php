@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 /**
  * Options for the ImgProxy Pro info endpoint
- * 
+ *
  * This class defines options for the info endpoint in ImgProxy Pro, which
  * provides metadata about the source image.
  */
@@ -103,36 +103,36 @@ final class InfoOptions extends AbstractOption
         $this->pagesNumber = $pagesNumber;
         $this->alpha = $alpha;
         $this->checkTransparency = $checkTransparency;
-        
+
         if ($colors < 0 || ($colors > 0 && ($colors < 2 || $colors > 256))) {
             throw new \InvalidArgumentException('Colors must be 0 (disabled) or between 2 and 256');
         }
-        
+
         $this->palette = $palette;
         $this->colors = $colors;
         $this->average = $average;
         $this->ignoreTransparent = $ignoreTransparent;
         $this->dominantColors = $dominantColors;
         $this->buildMissed = $buildMissed;
-        
+
         if ($blurhashXComponents < 0 || $blurhashXComponents > 9) {
             throw new \InvalidArgumentException('BlurHash X components must be between 0 and 9');
         }
-        
+
         if ($blurhashYComponents < 0 || $blurhashYComponents > 9) {
             throw new \InvalidArgumentException('BlurHash Y components must be between 0 and 9');
         }
-        
+
         $this->blurhashXComponents = $blurhashXComponents;
         $this->blurhashYComponents = $blurhashYComponents;
-        
+
         $validHashsums = ['md5', 'sha1', 'sha256', 'sha512'];
         foreach ($hashsums as $hashsum) {
             if (!in_array($hashsum, $validHashsums)) {
                 throw new \InvalidArgumentException(sprintf('Invalid hashsum type: %s', $hashsum));
             }
         }
-        
+
         $this->hashsums = $hashsums;
     }
 
@@ -151,89 +151,89 @@ final class InfoOptions extends AbstractOption
     {
         return [];
     }
-    
+
     /**
      * @inheritDoc
      */
     public function value(): string
     {
         $options = [];
-        
+
         if ($this->size) {
             $options[] = 'size:1';
         }
-        
+
         if ($this->format) {
             $options[] = 'format:1';
         }
-        
+
         if ($this->dimensions) {
             $options[] = 'dimensions:1';
         }
-        
+
         if ($this->exif) {
             $options[] = 'exif:1';
         }
-        
+
         if ($this->iptc) {
             $options[] = 'iptc:1';
         }
-        
+
         if ($this->xmp) {
             $options[] = 'xmp:1';
         }
-        
+
         if ($this->videoMeta) {
             $options[] = 'video_meta:1';
         }
-        
+
         if ($this->detectObjects) {
             $options[] = 'detect_objects:1';
         }
-        
+
         if ($this->colorspace) {
             $options[] = 'colorspace:1';
         }
-        
+
         if ($this->bands) {
             $options[] = 'bands:1';
         }
-        
+
         if ($this->sampleFormat) {
             $options[] = 'sample_format:1';
         }
-        
+
         if ($this->pagesNumber) {
             $options[] = 'pages_number:1';
         }
-        
+
         if ($this->alpha) {
             $options[] = sprintf('alpha:1:%s', $this->checkTransparency ? '1' : '0');
         }
-        
+
         if ($this->palette && $this->colors > 0) {
             $options[] = sprintf('palette:%d', $this->colors);
         }
-        
+
         if ($this->average) {
             $options[] = sprintf('average:1:%s', $this->ignoreTransparent ? '1' : '0');
         }
-        
+
         if ($this->dominantColors) {
             $options[] = sprintf('dominant_colors:1:%s', $this->buildMissed ? '1' : '0');
         }
-        
+
         if ($this->blurhashXComponents > 0 && $this->blurhashYComponents > 0) {
             $options[] = sprintf('blurhash:%d:%d', $this->blurhashXComponents, $this->blurhashYComponents);
         }
-        
+
         if (!empty($this->hashsums)) {
             $options[] = 'calc_hashsums:' . implode(':', $this->hashsums);
         }
-        
+
         return implode('/', $options);
     }
-    
+
     /**
      * Create a basic info options configuration.
      *
@@ -243,7 +243,7 @@ final class InfoOptions extends AbstractOption
     {
         return new self();
     }
-    
+
     /**
      * Create a complete info options configuration.
      *

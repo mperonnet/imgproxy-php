@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\GravityType;
+use Mperonnet\ImgProxy\Support\GravityType;
 
 final class Watermark extends AbstractOption
 {
@@ -67,19 +67,19 @@ final class Watermark extends AbstractOption
     public function data(): array
     {
         $data = [$this->opacity];
-        
+
         if ($this->position !== null) {
             $data[] = $this->position;
-            
+
             if ($this->x !== null) {
                 $data[] = $this->x;
-                
+
                 if ($this->y !== null) {
                     $data[] = $this->y;
                 }
             }
         }
-        
+
         if ($this->scale !== null) {
             // Ensure all intermediary values are set if only scale is provided
             if (count($data) === 1) {
@@ -91,10 +91,10 @@ final class Watermark extends AbstractOption
             if (count($data) === 3) {
                 $data[] = null; // y
             }
-            
+
             $data[] = $this->scale;
         }
-        
+
         return $data;
     }
 
@@ -125,7 +125,7 @@ final class Watermark extends AbstractOption
             ]
         );
     }
-    
+
     /**
      * Create a watermark in the center position.
      *
@@ -140,7 +140,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::CENTER, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the north (top) position.
      *
@@ -155,7 +155,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::NORTH, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the south (bottom) position.
      *
@@ -170,7 +170,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::SOUTH, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the east (right) position.
      *
@@ -185,7 +185,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::EAST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the west (left) position.
      *
@@ -200,7 +200,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::WEST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the north-east (top-right) position.
      *
@@ -215,7 +215,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::NORTH_EAST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the north-west (top-left) position.
      *
@@ -230,7 +230,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::NORTH_WEST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the south-east (bottom-right) position.
      *
@@ -245,7 +245,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::SOUTH_EAST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark in the south-west (bottom-left) position.
      *
@@ -260,7 +260,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::SOUTH_WEST, $x, $y, $scale);
     }
-    
+
     /**
      * Create a watermark using smart gravity (content-aware positioning).
      *
@@ -273,7 +273,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::SMART, null, null, $scale);
     }
-    
+
     /**
      * Create a watermark at a focus point.
      *
@@ -288,7 +288,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, GravityType::FOCUS_POINT, $x, $y, $scale);
     }
-    
+
     /**
      * Create a replicated watermark (tiled across the entire image).
      *
@@ -303,7 +303,7 @@ final class Watermark extends AbstractOption
     {
         return new self($opacity, self::REPLICATE_POSITION, $x, $y, $scale);
     }
-    
+
     /**
      * Create a chessboard pattern watermark (Pro feature).
      *

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 final class WatermarkText extends AbstractOption
 {
@@ -34,7 +34,7 @@ final class WatermarkText extends AbstractOption
             $this->encodeText($this->text),
         ];
     }
-    
+
     /**
      * Encodes the text to be used in the ImgProxy URL.
      *

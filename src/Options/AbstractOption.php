@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use ReflectionClass;
 use Stringable;
@@ -47,9 +47,9 @@ abstract class AbstractOption implements Stringable
 
     /**
      * Formats a boolean value for ImgProxy URL.
-     * 
+     *
      * @param bool|null $value The boolean value to format
-     * 
+     *
      * @return string|null The formatted value as a string or null if value is null
      */
     protected function formatBoolean(?bool $value): ?string
@@ -57,15 +57,15 @@ abstract class AbstractOption implements Stringable
         if ($value === null) {
             return null;
         }
-        
+
         return $value ? '1' : '0';
     }
-    
+
     /**
      * Formats a value to be used in a URL.
-     * 
+     *
      * @param mixed $value The value to format
-     * 
+     *
      * @return string|null Formatted value or null if the value should be omitted
      */
     protected function formatValue($value): ?string
@@ -73,16 +73,16 @@ abstract class AbstractOption implements Stringable
         if ($value === null) {
             return null;
         }
-        
+
         if (is_bool($value)) {
             return $this->formatBoolean($value);
         }
-        
+
         if (is_float($value)) {
             // Remove trailing zeros for floating point values
             return rtrim(rtrim(sprintf('%.6f', $value), '0'), '.');
         }
-        
+
         return (string) $value;
     }
 
@@ -95,30 +95,30 @@ abstract class AbstractOption implements Stringable
     {
         $values = [];
         $data = $this->data();
-        
+
         // First value is always the option name
         $values[] = $this->name();
-        
+
         // Process the data values
         foreach ($data as $key => $value) {
             $formattedValue = $this->formatValue($value);
-            
+
             // Add the value to our array
             $values[] = $formattedValue;
         }
-        
+
         // Filter out null values from the end of the array
         while (count($values) > 1 && end($values) === null) {
             array_pop($values);
         }
-        
+
         // Replace remaining null values with empty strings to maintain positions
         foreach ($values as &$value) {
             if ($value === null) {
                 $value = '';
             }
         }
-        
+
         return implode(':', $values);
     }
 

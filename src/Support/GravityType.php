@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Support;
+namespace Mperonnet\ImgProxy\Support;
 
 use InvalidArgumentException;
 
@@ -18,11 +18,11 @@ class GravityType
     public const SOUTH_EAST = 'soea';
     public const SOUTH_WEST = 'sowe';
     public const CENTER = 'ce';
-    
+
     // Special gravity types
     public const SMART = 'sm';
     public const FOCUS_POINT = 'fp';
-    
+
     // Pro gravity types
     public const OBJECT = 'obj';
     public const OBJECT_WEIGHTED = 'objw';
@@ -46,7 +46,13 @@ class GravityType
     private string $type;
     private float $xOffset = 0.0;
     private float $yOffset = 0.0;
+    /**
+     * @var array<string>
+     */
     private array $objectClasses = [];
+    /**
+     * @var array<string, float|int>
+     */
     private array $objectWeights = [];
 
     /**
@@ -68,18 +74,18 @@ class GravityType
         }
 
         $this->type = $type;
-        
+
         if ($xOffset !== null) {
             $this->xOffset = (float) $xOffset;
         }
-        
+
         if ($yOffset !== null) {
             $this->yOffset = (float) $yOffset;
         }
-        
+
         if (in_array($type, [self::OBJECT, self::OBJECT_WEIGHTED])) {
             $this->objectClasses = $objectClasses;
-            
+
             if ($type === self::OBJECT_WEIGHTED) {
                 $this->objectWeights = $objectWeights;
             }
@@ -112,53 +118,53 @@ class GravityType
         if ($this->type === self::SMART) {
             return $this->type;
         }
-        
+
         if ($this->type === self::FOCUS_POINT) {
             return sprintf('%s:%s:%s', $this->type, $this->xOffset, $this->yOffset);
         }
-        
+
         if ($this->type === self::OBJECT) {
             $result = $this->type;
             if (!empty($this->objectClasses)) {
                 $result .= ':' . implode(':', $this->objectClasses);
             }
-            
+
             return $result;
         }
-        
+
         if ($this->type === self::OBJECT_WEIGHTED) {
             if (empty($this->objectWeights) && empty($this->objectClasses)) {
                 return $this->type;
             }
-            
+
             $result = [$this->type];
-            
+
             // If we have classes but no weights, treat them as weight 1
             if (empty($this->objectWeights) && !empty($this->objectClasses)) {
                 foreach ($this->objectClasses as $class) {
                     $result[] = $class;
                     $result[] = '1';
                 }
-                
+
                 return implode(':', $result);
             }
-            
+
             // Add classes with weights
             foreach ($this->objectWeights as $class => $weight) {
                 $result[] = $class;
                 $result[] = (string) $weight;
             }
-            
+
             return implode(':', $result);
         }
-        
+
         if ($this->xOffset === 0.0 && $this->yOffset === 0.0) {
             return $this->type;
         }
-        
+
         return sprintf('%s:%s:%s', $this->type, $this->xOffset, $this->yOffset);
     }
-    
+
     /**
      * Creates a north gravity.
      *
@@ -171,7 +177,7 @@ class GravityType
     {
         return new self(self::NORTH, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a south gravity.
      *
@@ -184,7 +190,7 @@ class GravityType
     {
         return new self(self::SOUTH, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates an east gravity.
      *
@@ -197,7 +203,7 @@ class GravityType
     {
         return new self(self::EAST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a west gravity.
      *
@@ -210,7 +216,7 @@ class GravityType
     {
         return new self(self::WEST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a northeast gravity.
      *
@@ -223,7 +229,7 @@ class GravityType
     {
         return new self(self::NORTH_EAST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a northwest gravity.
      *
@@ -236,7 +242,7 @@ class GravityType
     {
         return new self(self::NORTH_WEST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a southeast gravity.
      *
@@ -249,7 +255,7 @@ class GravityType
     {
         return new self(self::SOUTH_EAST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a southwest gravity.
      *
@@ -262,7 +268,7 @@ class GravityType
     {
         return new self(self::SOUTH_WEST, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a center gravity.
      *
@@ -275,7 +281,7 @@ class GravityType
     {
         return new self(self::CENTER, $xOffset, $yOffset);
     }
-    
+
     /**
      * Creates a smart gravity (using image content detection).
      *
@@ -285,7 +291,7 @@ class GravityType
     {
         return new self(self::SMART);
     }
-    
+
     /**
      * Creates a focus point gravity.
      *
@@ -298,7 +304,7 @@ class GravityType
     {
         return new self(self::FOCUS_POINT, $x, $y);
     }
-    
+
     /**
      * Creates an object-detection based gravity (Pro feature).
      *
@@ -310,7 +316,7 @@ class GravityType
     {
         return new self(self::OBJECT, null, null, $objectClasses);
     }
-    
+
     /**
      * Creates a weighted object-detection based gravity (Pro feature).
      *

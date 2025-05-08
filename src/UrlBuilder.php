@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy;
+namespace Mperonnet\ImgProxy;
 
-use Onliner\ImgProxy\Options\AbstractOption;
-use Onliner\ImgProxy\Support\ImageFormat;
-use Onliner\ImgProxy\Support\UrlEncrypter;
-use Onliner\ImgProxy\Support\UrlSigner;
+use Mperonnet\ImgProxy\Options\AbstractOption;
+use Mperonnet\ImgProxy\Support\ImageFormat;
+use Mperonnet\ImgProxy\Support\UrlEncrypter;
+use Mperonnet\ImgProxy\Support\UrlSigner;
 
 /**
  * ImgProxy URL builder
- * 
+ *
  * This class is an enhanced version of the original UrlBuilder from the
  * onliner/imgproxy-php library, with added support for ImgProxy Pro features
  * and all URL formats.
@@ -30,17 +30,17 @@ class UrlBuilder
     private ?UrlEncrypter $encrypter = null;
     private string $sourceUrlFormat = self::SOURCE_URL_FORMAT_BASE64;
     private int $splitSize = self::DEFAULT_SPLIT_SIZE;
-    
+
     /**
      * @var array<AbstractOption>
      */
     private array $options = [];
-    
+
     /**
      * @var array<array<AbstractOption>>
      */
     private array $pipelines = [];
-    
+
     /**
      * @var bool
      */
@@ -88,7 +88,7 @@ class UrlBuilder
 
     /**
      * Configures the builder to use base64 encoding for the source URL.
-     * 
+     *
      * @return $this
      */
     public function useBase64(): self
@@ -102,7 +102,7 @@ class UrlBuilder
     /**
      * Configures the builder to use plain source URL.
      * This is equivalent to the original `encoded(false)` method.
-     * 
+     *
      * @return $this
      */
     public function usePlain(): self
@@ -115,9 +115,9 @@ class UrlBuilder
 
     /**
      * Backward compatibility method for the original API.
-     * 
+     *
      * @param bool $encoded
-     * 
+     *
      * @return $this
      */
     public function encoded(bool $encoded): self
@@ -130,9 +130,9 @@ class UrlBuilder
 
     /**
      * Configures the builder to use encrypted source URL (Pro feature).
-     * 
+     *
      * @param string $key The hex-encoded key to use for encryption
-     * 
+     *
      * @return $this
      */
     public function useEncryption(string $key): self
@@ -172,9 +172,9 @@ class UrlBuilder
 
     /**
      * Adds a new pipeline with the given options (Pro feature).
-     * 
+     *
      * @param AbstractOption ...$options
-     * 
+     *
      * @return self
      */
     public function pipeline(AbstractOption ...$options): self
@@ -209,20 +209,20 @@ class UrlBuilder
      * Builds the URL path with options and pipelines.
      *
      * @param string $source The encoded source part of the URL
-     * 
+     *
      * @return string
      */
     private function buildPathWithPipelines(string $source): string
     {
         $optionsPath = implode('/', $this->options);
-        
+
         // If we have pipelines, add them to the path
         if (!empty($this->pipelines)) {
             foreach ($this->pipelines as $pipeline) {
                 $optionsPath .= '/-/' . implode('/', $pipeline);
             }
         }
-        
+
         return sprintf('/%s/%s', $optionsPath, $source);
     }
 

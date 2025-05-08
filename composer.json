@@ -1,8 +1,8 @@
 {
-    "name": "onliner/imgproxy-php",
+    "name": "mperonnet/imgproxy-php",
     "type": "library",
-    "description": "ImgProxy URL builder with full features support for PHP",
-    "keywords": ["imgproxy", "imageproxy", "image", "resize", "processing", "optimization"],
+    "description": "ImgProxy URL builder with complete Pro features support for PHP, based on onliner/imgproxy-php",
+    "keywords": ["imgproxy", "imageproxy", "image", "resize", "processing", "optimization", "pro"],
     "license": "MIT",
     "require": {
         "php": "^8.0"
@@ -13,12 +13,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Onliner\\ImgProxy\\": "src/"
+            "Mperonnet\\ImgProxy\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Onliner\\ImgProxy\\": "tests/"
+            "Mperonnet\\ImgProxy\\": "tests/"
         }
     }
 }

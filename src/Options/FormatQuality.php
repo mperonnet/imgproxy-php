@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
 final class FormatQuality extends AbstractOption
 {
     /**
-     * @var array[]
+     * @var array<array{0: string, 1: int}>
      */
     private array $options = [];
 
@@ -19,6 +19,10 @@ final class FormatQuality extends AbstractOption
     public function __construct(array $options)
     {
         foreach ($options as $format => $quality) {
+            if (!is_int($quality)) {
+                $quality = (int) $quality;
+            }
+
             if ($quality < 0 || $quality > 100) {
                 throw new InvalidArgumentException(sprintf('Invalid quality: %s (should be between 0 and 100)', $quality));
             }
@@ -46,27 +50,5 @@ final class FormatQuality extends AbstractOption
     {
         return array_merge(...$this->options);
     }
-    
-    /**
-     * Add a quality setting for a specific format.
-     *
-     * @param string $format Image format
-     * @param int $quality Quality value (0-100)
-     *
-     * @return self
-     */
-    public function add(string $format, int $quality): self
-    {
-        $newOptions = [];
-        
-        // Copy existing options
-        foreach ($this->options as [$fmt, $qual]) {
-            $newOptions[$fmt] = $qual;
-        }
-        
-        // Add new option
-        $newOptions[$format] = $quality;
-        
-        return new self($newOptions);
-    }
+
 }

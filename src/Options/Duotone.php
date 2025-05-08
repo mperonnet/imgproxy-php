@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 
 final class Duotone extends AbstractOption
 {
@@ -25,13 +25,13 @@ final class Duotone extends AbstractOption
         }
 
         $this->intensity = $intensity;
-        
+
         if ($color1 !== null) {
             // Validate the color (will throw InvalidArgumentException if invalid)
             Color::fromHex($color1);
             $this->color1 = $color1;
         }
-        
+
         if ($color2 !== null) {
             // Validate the color (will throw InvalidArgumentException if invalid)
             Color::fromHex($color2);

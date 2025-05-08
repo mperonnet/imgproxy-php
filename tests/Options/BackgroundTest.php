@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 use PHPUnit\Framework\TestCase;
 
 class BackgroundTest extends TestCase
 {
     /**
      * @dataProvider validData
+     * @param array<int> $colorArgs RGB color components [red, green, blue]
      */
     public function testCreate(array $colorArgs, string $expected): void
     {
@@ -54,8 +55,8 @@ class BackgroundTest extends TestCase
 
     /**
      * Creates a Color instance from array args
-     * 
-     * @param array $args [red, green, blue]
+     *
+     * @param array<int> $args RGB color components [red, green, blue]
      * @return Color
      */
     private function createColor(array $args): Color

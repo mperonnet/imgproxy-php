@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 
 final class Background extends AbstractOption
 {

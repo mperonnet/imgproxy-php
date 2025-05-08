@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
@@ -24,7 +24,7 @@ final class Hashsum extends AbstractOption
     public function __construct(string $type, ?string $hashsum = null)
     {
         $validTypes = [self::TYPE_NONE, self::TYPE_MD5, self::TYPE_SHA1, self::TYPE_SHA256, self::TYPE_SHA512];
-        
+
         if (!in_array($type, $validTypes)) {
             throw new InvalidArgumentException(
                 sprintf('Invalid hashsum type: %s (should be none, md5, sha1, sha256, or sha512)', $type)
@@ -61,7 +61,7 @@ final class Hashsum extends AbstractOption
             $this->hashsum,
         ];
     }
-    
+
     /**
      * Create a hashsum option with MD5 type.
      *
@@ -73,7 +73,7 @@ final class Hashsum extends AbstractOption
     {
         return new self(self::TYPE_MD5, $hashsum);
     }
-    
+
     /**
      * Create a hashsum option with SHA1 type.
      *
@@ -85,7 +85,7 @@ final class Hashsum extends AbstractOption
     {
         return new self(self::TYPE_SHA1, $hashsum);
     }
-    
+
     /**
      * Create a hashsum option with SHA256 type.
      *
@@ -97,7 +97,7 @@ final class Hashsum extends AbstractOption
     {
         return new self(self::TYPE_SHA256, $hashsum);
     }
-    
+
     /**
      * Create a hashsum option with SHA512 type.
      *
@@ -109,7 +109,7 @@ final class Hashsum extends AbstractOption
     {
         return new self(self::TYPE_SHA512, $hashsum);
     }
-    
+
     /**
      * Create a hashsum option with None type (disable hashsum checking).
      *

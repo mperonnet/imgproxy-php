@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
@@ -46,27 +46,27 @@ final class VideoThumbnailAnimation extends AbstractOption
         if ($delay < 0) {
             throw new InvalidArgumentException(sprintf('Invalid delay: %d (should be greater than or equal to 0)', $delay));
         }
-        
+
         if ($frames < 0) {
             throw new InvalidArgumentException(sprintf('Invalid frames: %d (should be greater than or equal to 0)', $frames));
         }
-        
+
         if ($frameWidth < 0) {
             throw new InvalidArgumentException(sprintf('Invalid frame width: %d (should be greater than or equal to 0)', $frameWidth));
         }
-        
+
         if ($frameHeight < 0) {
             throw new InvalidArgumentException(sprintf('Invalid frame height: %d (should be greater than or equal to 0)', $frameHeight));
         }
-        
+
         if ($focusX !== null && ($focusX < 0 || $focusX > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid focus X: %f (should be between 0 and 1)', $focusX));
         }
-        
+
         if ($focusY !== null && ($focusY < 0 || $focusY > 1)) {
             throw new InvalidArgumentException(sprintf('Invalid focus Y: %f (should be between 0 and 1)', $focusY));
         }
-        
+
         $this->step = $step;
         $this->delay = $delay;
         $this->frames = $frames;

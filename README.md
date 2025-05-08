@@ -15,7 +15,7 @@ This library is based on and extends the work of the [onliner/imgproxy-php](http
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 ```bash
-composer require onliner/imgproxy-php
+composer require mperonnet/imgproxy-php
 ```
 
 ## Features
@@ -32,11 +32,11 @@ composer require onliner/imgproxy-php
 ## Basic Usage
 
 ```php
-use Onliner\ImgProxy\UrlBuilder;
-use Onliner\ImgProxy\Options\Width;
-use Onliner\ImgProxy\Options\Height;
-use Onliner\ImgProxy\Options\Quality;
-use Onliner\ImgProxy\Options\Dpr;
+use Mperonnet\ImgProxy\UrlBuilder;
+use Mperonnet\ImgProxy\Options\Width;
+use Mperonnet\ImgProxy\Options\Height;
+use Mperonnet\ImgProxy\Options\Quality;
+use Mperonnet\ImgProxy\Options\Dpr;
 
 $key = getenv('IMGPROXY_KEY');
 $salt = getenv('IMGPROXY_SALT');
@@ -85,8 +85,8 @@ $url = $builder->useEncryption($encryptionKey)->url($src);
 ### Gravity
 
 ```php
-use Onliner\ImgProxy\Options\Gravity;
-use Onliner\ImgProxy\Support\GravityType;
+use Mperonnet\ImgProxy\Options\Gravity;
+use Mperonnet\ImgProxy\Support\GravityType;
 
 // Basic gravity
 $builder->with(new Gravity(GravityType::CENTER));
@@ -110,9 +110,9 @@ $builder->with(Gravity::objectWeighted(['face' => 2, 'cat' => 1]));
 ### Watermark
 
 ```php
-use Onliner\ImgProxy\Options\Watermark;
-use Onliner\ImgProxy\Options\WatermarkText;
-use Onliner\ImgProxy\Options\WatermarkUrl;
+use Mperonnet\ImgProxy\Options\Watermark;
+use Mperonnet\ImgProxy\Options\WatermarkText;
+use Mperonnet\ImgProxy\Options\WatermarkUrl;
 
 // Basic watermark
 $builder->with(Watermark::center(0.5, 10, 10, 0.3));
@@ -130,7 +130,7 @@ $builder->with(new WatermarkText('© Example Corporation'));
 ### Info Endpoint (Pro)
 
 ```php
-use Onliner\ImgProxy\Options\InfoOptions;
+use Mperonnet\ImgProxy\Options\InfoOptions;
 
 // Basic info
 $infoUrl = $builder->info()->with(InfoOptions::basic())->url($src);
@@ -156,9 +156,9 @@ $infoUrl = $builder->info()->with(
 ### Chained Pipelines (Pro)
 
 ```php
-use Onliner\ImgProxy\Options\Resize;
-use Onliner\ImgProxy\Options\Blur;
-use Onliner\ImgProxy\Options\Watermark;
+use Mperonnet\ImgProxy\Options\Resize;
+use Mperonnet\ImgProxy\Options\Blur;
+use Mperonnet\ImgProxy\Options\Watermark;
 
 // First resize, then blur and add watermark
 $url = $builder
@@ -175,14 +175,14 @@ $url = $builder
 ### Resizing and Dimensions
 
 ```php
-use Onliner\ImgProxy\Options\Resize;
-use Onliner\ImgProxy\Options\Size;
-use Onliner\ImgProxy\Options\Width;
-use Onliner\ImgProxy\Options\Height;
-use Onliner\ImgProxy\Options\MinWidth;
-use Onliner\ImgProxy\Options\MinHeight;
-use Onliner\ImgProxy\Options\Zoom;
-use Onliner\ImgProxy\Options\Dpr;
+use Mperonnet\ImgProxy\Options\Resize;
+use Mperonnet\ImgProxy\Options\Size;
+use Mperonnet\ImgProxy\Options\Width;
+use Mperonnet\ImgProxy\Options\Height;
+use Mperonnet\ImgProxy\Options\MinWidth;
+use Mperonnet\ImgProxy\Options\MinHeight;
+use Mperonnet\ImgProxy\Options\Zoom;
+use Mperonnet\ImgProxy\Options\Dpr;
 
 $builder->with(
     new Resize('fill', 300, 400, true, false),
@@ -199,10 +199,10 @@ $builder->with(
 ### Image Adjustments
 
 ```php
-use Onliner\ImgProxy\Options\Adjust;
-use Onliner\ImgProxy\Options\Brightness;
-use Onliner\ImgProxy\Options\Contrast;
-use Onliner\ImgProxy\Options\Saturation;
+use Mperonnet\ImgProxy\Options\Adjust;
+use Mperonnet\ImgProxy\Options\Brightness;
+use Mperonnet\ImgProxy\Options\Contrast;
+use Mperonnet\ImgProxy\Options\Saturation;
 
 $builder->with(
     new Adjust(10, 1.1, 0.9),
@@ -215,14 +215,14 @@ $builder->with(
 ### Color Effects
 
 ```php
-use Onliner\ImgProxy\Options\Background;
-use Onliner\ImgProxy\Options\Blur;
-use Onliner\ImgProxy\Options\Sharpen;
-use Onliner\ImgProxy\Options\Monochrome;
-use Onliner\ImgProxy\Options\Duotone;
-use Onliner\ImgProxy\Options\Colorize;
-use Onliner\ImgProxy\Options\Gradient;
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Options\Background;
+use Mperonnet\ImgProxy\Options\Blur;
+use Mperonnet\ImgProxy\Options\Sharpen;
+use Mperonnet\ImgProxy\Options\Monochrome;
+use Mperonnet\ImgProxy\Options\Duotone;
+use Mperonnet\ImgProxy\Options\Colorize;
+use Mperonnet\ImgProxy\Options\Gradient;
+use Mperonnet\ImgProxy\Support\Color;
 
 $builder->with(
     new Background(new Color(255, 255, 255)),
@@ -238,11 +238,11 @@ $builder->with(
 ### Format and Quality
 
 ```php
-use Onliner\ImgProxy\Options\Format;
-use Onliner\ImgProxy\Options\Quality;
-use Onliner\ImgProxy\Options\FormatQuality;
-use Onliner\ImgProxy\Options\Autoquality;
-use Onliner\ImgProxy\Options\MaxBytes;
+use Mperonnet\ImgProxy\Options\Format;
+use Mperonnet\ImgProxy\Options\Quality;
+use Mperonnet\ImgProxy\Options\FormatQuality;
+use Mperonnet\ImgProxy\Options\Autoquality;
+use Mperonnet\ImgProxy\Options\MaxBytes;
 
 $builder->with(
     new Format('webp'),
@@ -260,8 +260,8 @@ $builder->with(
 ### Object Detection (Pro)
 
 ```php
-use Onliner\ImgProxy\Options\BlurDetections;
-use Onliner\ImgProxy\Options\DrawDetections;
+use Mperonnet\ImgProxy\Options\BlurDetections;
+use Mperonnet\ImgProxy\Options\DrawDetections;
 
 $builder->with(
     new BlurDetections(5, ['face']),
@@ -278,12 +278,12 @@ This library is an extension of the [onliner/imgproxy-php](https://github.com/on
 Released under the [MIT license](LICENSE).
 
 
-[version-badge]:    https://img.shields.io/packagist/v/onliner/imgproxy-php.svg
-[version-link]:     https://packagist.org/packages/onliner/imgproxy-php
-[downloads-link]:   https://packagist.org/packages/onliner/imgproxy-php
-[downloads-badge]:  https://poser.pugx.org/onliner/imgproxy-php/downloads.svg
+[version-badge]:    https://img.shields.io/packagist/v/mperonnet/imgproxy-php.svg
+[version-link]:     https://packagist.org/packages/mperonnet/imgproxy-php
+[downloads-link]:   https://packagist.org/packages/mperonnet/imgproxy-php
+[downloads-badge]:  https://poser.pugx.org/mperonnet/imgproxy-php/downloads.svg
 [php-badge]:        https://img.shields.io/badge/php-8.0+-brightgreen.svg
 [php-link]:         https://www.php.net/
 [license-badge]:    https://img.shields.io/badge/license-MIT-brightgreen.svg
-[build-link]:       https://github.com/onliner/imgproxy-php/actions?workflow=test
-[build-badge]:      https://github.com/onliner/imgproxy-php/workflows/test/badge.svg
+[build-link]:       https://github.com/mperonnet/imgproxy-php/actions?workflow=test
+[build-badge]:      https://github.com/mperonnet/imgproxy-php/workflows/test/badge.svg

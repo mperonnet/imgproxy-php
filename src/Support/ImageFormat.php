@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Support;
+namespace Mperonnet\ImgProxy\Support;
 
 use InvalidArgumentException;
 
@@ -20,17 +20,17 @@ class ImageFormat
     public const HEIC = 'heic';
     public const BMP = 'bmp';
     public const TIFF = 'tiff';
-    
+
     // Document formats
     public const PDF = 'pdf';
-    
+
     // Video formats
     public const MP4 = 'mp4';
-    
+
     // Pro formats
     public const JXL = 'jxl';        // JPEG XL
     public const BEST = 'best';      // Best format
-    
+
     private const SUPPORTED = [
         self::PNG,
         self::JPG,
@@ -103,77 +103,77 @@ class ImageFormat
 
     /**
      * @param string $extension
-     * 
+     *
      * @return string
      */
     private function cast(string $extension): string
     {
         return strtolower(trim($extension));
     }
-    
+
     /**
      * Create a PNG format.
-     * 
+     *
      * @return self
      */
     public static function png(): self
     {
         return new self(self::PNG);
     }
-    
+
     /**
      * Create a JPG format.
-     * 
+     *
      * @return self
      */
     public static function jpg(): self
     {
         return new self(self::JPG);
     }
-    
+
     /**
      * Create a WEBP format.
-     * 
+     *
      * @return self
      */
     public static function webp(): self
     {
         return new self(self::WEBP);
     }
-    
+
     /**
      * Create an AVIF format.
-     * 
+     *
      * @return self
      */
     public static function avif(): self
     {
         return new self(self::AVIF);
     }
-    
+
     /**
      * Create a GIF format.
-     * 
+     *
      * @return self
      */
     public static function gif(): self
     {
         return new self(self::GIF);
     }
-    
+
     /**
      * Create a JPEG XL format (Pro feature).
-     * 
+     *
      * @return self
      */
     public static function jxl(): self
     {
         return new self(self::JXL);
     }
-    
+
     /**
      * Create a 'best' format (Pro feature) - ImgProxy will select the best format.
-     * 
+     *
      * @return self
      */
     public static function best(): self

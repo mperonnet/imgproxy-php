@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
 
@@ -12,7 +12,7 @@ final class Autoquality extends AbstractOption
     public const METHOD_SIZE = 'size';
     public const METHOD_DSSIM = 'dssim';
     public const METHOD_ML = 'ml';
-    
+
     private ?string $method;
     private ?float $target;
     private ?int $minQuality;
@@ -36,19 +36,19 @@ final class Autoquality extends AbstractOption
         if ($method !== null && !in_array($method, $this->getMethods())) {
             throw new InvalidArgumentException(sprintf('Invalid autoquality method: %s', $method));
         }
-        
+
         if ($minQuality !== null && ($minQuality < 1 || $minQuality > 100)) {
             throw new InvalidArgumentException(sprintf('Invalid min quality: %s (should be between 1 and 100)', $minQuality));
         }
-        
+
         if ($maxQuality !== null && ($maxQuality < 1 || $maxQuality > 100)) {
             throw new InvalidArgumentException(sprintf('Invalid max quality: %s (should be between 1 and 100)', $maxQuality));
         }
-        
+
         if ($minQuality !== null && $maxQuality !== null && $minQuality > $maxQuality) {
             throw new InvalidArgumentException(sprintf('Min quality (%s) cannot be greater than max quality (%s)', $minQuality, $maxQuality));
         }
-        
+
         if ($allowedError !== null && $allowedError < 0) {
             throw new InvalidArgumentException(sprintf('Invalid allowed error: %s (should be greater than or equal to 0)', $allowedError));
         }
@@ -81,7 +81,7 @@ final class Autoquality extends AbstractOption
             $this->allowedError,
         ];
     }
-    
+
     /**
      * @return array<string>
      */
@@ -94,7 +94,7 @@ final class Autoquality extends AbstractOption
             self::METHOD_ML,
         ];
     }
-    
+
     /**
      * Create an autoquality option with the size method.
      *
@@ -108,7 +108,7 @@ final class Autoquality extends AbstractOption
     {
         return new self(self::METHOD_SIZE, $targetSize, $minQuality, $maxQuality);
     }
-    
+
     /**
      * Create an autoquality option with the DSSIM method.
      *
@@ -127,7 +127,7 @@ final class Autoquality extends AbstractOption
     ): self {
         return new self(self::METHOD_DSSIM, $targetDssim, $minQuality, $maxQuality, $allowedError);
     }
-    
+
     /**
      * Create an autoquality option with the ML method.
      *
@@ -146,7 +146,7 @@ final class Autoquality extends AbstractOption
     ): self {
         return new self(self::METHOD_ML, $targetDssim, $minQuality, $maxQuality, $allowedError);
     }
-    
+
     /**
      * Create an autoquality option with the none method (disable autoquality).
      *

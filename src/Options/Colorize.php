@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Onliner\ImgProxy\Options;
+namespace Mperonnet\ImgProxy\Options;
 
 use InvalidArgumentException;
-use Onliner\ImgProxy\Support\Color;
+use Mperonnet\ImgProxy\Support\Color;
 
 final class Colorize extends AbstractOption
 {
@@ -25,13 +25,13 @@ final class Colorize extends AbstractOption
         }
 
         $this->opacity = $opacity;
-        
+
         if ($color !== null) {
             // Validate the color (will throw InvalidArgumentException if invalid)
             Color::fromHex($color);
             $this->color = $color;
         }
-        
+
         $this->keepAlpha = $keepAlpha;
     }
 
