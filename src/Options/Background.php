@@ -10,9 +10,9 @@ final class Background extends AbstractOption
 {
     private Color $color;
 
-    public function __construct(string $color)
+    public function __construct(Color $color)
     {
-        $this->color = new Color($color);
+        $this->color = $color;
     }
 
     /**

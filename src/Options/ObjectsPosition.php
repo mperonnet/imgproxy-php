@@ -7,92 +7,94 @@ namespace Onliner\ImgProxy\Options;
 use InvalidArgumentException;
 use Onliner\ImgProxy\Support\GravityType;
 
-final class Gravity extends AbstractOption
+final class ObjectsPosition extends AbstractOption
 {
+    public const FOCUS_POINT = 'fp';
+    public const PROPORTIONAL = 'prop';
+    
     private string $type;
     private ?float $x;
     private ?float $y;
-    private array $objectClasses = [];
-    private array $objectWeights = [];
+    private bool $isFocusPoint = false;
+    private bool $isProportional = false;
 
     /**
-     * @param string|GravityType $type Gravity type or GravityType object
+     * @param string $type Position type (no, so, ea, we, noea, nowe, soea, sowe, ce, fp, prop)
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
-     * @param array<string> $objectClasses Object classes for obj/objw gravity types
-     * @param array<string, float|int> $objectWeights Weights for object classes when using objw
      */
-    public function __construct(
-        $type,
-        ?float $x = null,
-        ?float $y = null,
-        array $objectClasses = [],
-        array $objectWeights = []
-    ) {
-        if ($type instanceof GravityType) {
-            $this->type = $type->value();
+    public function __construct(string $type, ?float $x = null, ?float $y = null)
+    {
+        if ($type === self::FOCUS_POINT) {
+            $this->isFocusPoint = true;
+            $this->type = $type;
             
-            // If we have a GravityType object we don't need to validate the other parameters
-            // since they are validated by the GravityType constructor.
+            if ($x === null || $y === null) {
+                throw new InvalidArgumentException('Focus point requires both X and Y coordinates');
+            }
+            
+            if ($x < 0 || $x > 1 || $y < 0 || $y > 1) {
+                throw new InvalidArgumentException('Focus point coordinates must be between 0 and 1');
+            }
+            
             $this->x = $x;
             $this->y = $y;
-            $this->objectClasses = $objectClasses;
-            $this->objectWeights = $objectWeights;
             return;
         }
-
-        if (!in_array($type, GravityType::TYPES)) {
-            throw new InvalidArgumentException(sprintf('Invalid gravity type: %s', $type));
+        
+        if ($type === self::PROPORTIONAL) {
+            $this->isProportional = true;
+            $this->type = $type;
+            $this->x = null;
+            $this->y = null;
+            return;
+        }
+        
+        // For standard position types, we use the GravityType constants since they're the same
+        if (!in_array($type, GravityType::TYPES) || $type === GravityType::OBJECT || $type === GravityType::OBJECT_WEIGHTED) {
+            throw new InvalidArgumentException(sprintf('Invalid position type: %s', $type));
         }
 
         $this->type = $type;
 
         if ($x !== null && $x < 0) {
-            throw new InvalidArgumentException(sprintf('Invalid gravity X: %s', $x));
+            throw new InvalidArgumentException(sprintf('Invalid position X: %s', $x));
         }
 
         if ($y !== null && $y < 0) {
-            throw new InvalidArgumentException(sprintf('Invalid gravity Y: %s', $y));
+            throw new InvalidArgumentException(sprintf('Invalid position Y: %s', $y));
         }
 
         $this->x = $x;
         $this->y = $y;
-        $this->objectClasses = $objectClasses;
-        $this->objectWeights = $objectWeights;
     }
 
     /**
-     * @param string $gravity
+     * @param string $position
      *
      * @return static
      */
-    public static function fromString(string $gravity): self
+    public static function fromString(string $position): self
     {
-        $params = explode(':', $gravity);
+        $params = explode(':', $position);
         $type = array_shift($params);
 
-        if (!in_array($type, GravityType::TYPES)) {
-            throw new InvalidArgumentException(sprintf('Invalid gravity type: %s', $type));
-        }
-
-        if ($type === GravityType::OBJECT) {
-            return new self($type, null, null, $params);
-        }
-
-        if ($type === GravityType::OBJECT_WEIGHTED) {
-            $objectWeights = [];
+        if ($type === self::FOCUS_POINT) {
+            $x = isset($params[0]) && is_numeric($params[0]) ? (float) $params[0] : null;
+            $y = isset($params[1]) && is_numeric($params[1]) ? (float) $params[1] : null;
             
-            // Parse pairs of class:weight into an associative array
-            for ($i = 0; $i < count($params); $i += 2) {
-                if (isset($params[$i + 1])) {
-                    $objectWeights[$params[$i]] = (float) $params[$i + 1];
-                }
+            if ($x === null || $y === null) {
+                throw new InvalidArgumentException('Focus point requires both X and Y coordinates');
             }
             
-            return new self($type, null, null, [], $objectWeights);
+            return new self($type, $x, $y);
+        }
+        
+        if ($type === self::PROPORTIONAL) {
+            return new self($type);
         }
 
-        // Handle standard gravity types with optional offsets
+        // Handle standard position types with optional offsets
         $x = isset($params[0]) && is_numeric($params[0]) ? (float) $params[0] : null;
         $y = isset($params[1]) && is_numeric($params[1]) ? (float) $params[1] : null;
 
@@ -104,7 +106,7 @@ final class Gravity extends AbstractOption
      */
     public function name(): string
     {
-        return 'g';
+        return 'op';
     }
 
     /**
@@ -112,30 +114,10 @@ final class Gravity extends AbstractOption
      */
     public function data(): array
     {
-        // Object oriented gravity
-        if ($this->type === GravityType::OBJECT) {
-            $result = [$this->type];
-            
-            foreach ($this->objectClasses as $class) {
-                $result[] = $class;
-            }
-            
-            return $result;
+        if ($this->isProportional) {
+            return [$this->type];
         }
         
-        // Weighted object oriented gravity
-        if ($this->type === GravityType::OBJECT_WEIGHTED) {
-            $result = [$this->type];
-            
-            foreach ($this->objectWeights as $class => $weight) {
-                $result[] = $class;
-                $result[] = $weight;
-            }
-            
-            return $result;
-        }
-        
-        // Standard gravity with optional offsets
         return [
             $this->type,
             $this->x,
@@ -144,7 +126,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a north gravity.
+     * Create a north position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -157,7 +139,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a south gravity.
+     * Create a south position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -170,7 +152,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create an east gravity.
+     * Create an east position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -183,7 +165,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a west gravity.
+     * Create a west position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -196,7 +178,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a northeast gravity.
+     * Create a northeast position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -209,7 +191,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a northwest gravity.
+     * Create a northwest position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -222,7 +204,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a southeast gravity.
+     * Create a southeast position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -235,7 +217,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a southwest gravity.
+     * Create a southwest position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -248,7 +230,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a center gravity.
+     * Create a center position.
      *
      * @param float|null $x X offset (0-1 for relative, >=1 for absolute)
      * @param float|null $y Y offset (0-1 for relative, >=1 for absolute)
@@ -261,17 +243,7 @@ final class Gravity extends AbstractOption
     }
     
     /**
-     * Create a smart gravity (using image content detection).
-     *
-     * @return self
-     */
-    public static function smart(): self
-    {
-        return new self(GravityType::SMART);
-    }
-    
-    /**
-     * Create a focus point gravity.
+     * Create a focus point position.
      *
      * @param float $x X coordinate (0-1)
      * @param float $y Y coordinate (0-1)
@@ -280,30 +252,17 @@ final class Gravity extends AbstractOption
      */
     public static function focusPoint(float $x, float $y): self
     {
-        return new self(GravityType::FOCUS_POINT, $x, $y);
+        return new self(self::FOCUS_POINT, $x, $y);
     }
     
     /**
-     * Create an object-detection based gravity (Pro feature).
-     *
-     * @param array<string> $objectClasses Object classes to detect (e.g., ['face', 'cat'])
-     *
-     * @return self
-     */
-    public static function object(array $objectClasses = []): self
-    {
-        return new self(GravityType::OBJECT, null, null, $objectClasses);
-    }
-    
-    /**
-     * Create a weighted object-detection based gravity (Pro feature).
-     *
-     * @param array<string, float|int> $objectWeights Object classes with weights (e.g., ['face' => 2, 'cat' => 1])
+     * Create a proportional position (object offsets in the result image are proportional
+     * to their offsets in the original image).
      *
      * @return self
      */
-    public static function objectWeighted(array $objectWeights = []): self
+    public static function proportional(): self
     {
-        return new self(GravityType::OBJECT_WEIGHTED, null, null, [], $objectWeights);
+        return new self(self::PROPORTIONAL);
     }
 }

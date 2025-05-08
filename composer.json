@@ -1,8 +1,8 @@
 {
     "name": "onliner/imgproxy-php",
     "type": "library",
-    "description": "ImgProxy url builder for PHP",
-    "keywords": ["imgproxy", "imageproxy", "image", "resize"],
+    "description": "ImgProxy URL builder with full features support for PHP",
+    "keywords": ["imgproxy", "imageproxy", "image", "resize", "processing", "optimization"],
     "license": "MIT",
     "require": {
         "php": "^8.0"

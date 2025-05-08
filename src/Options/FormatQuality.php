@@ -19,8 +19,11 @@ final class FormatQuality extends AbstractOption
     public function __construct(array $options)
     {
         foreach ($options as $format => $quality) {
-            $data = (new Quality($quality))->data();
-            $this->options[] = [$format, ...$data];
+            if ($quality < 1 || $quality > 100) {
+                throw new InvalidArgumentException(sprintf('Invalid quality: %s (should be between 1 and 100)', $quality));
+            }
+
+            $this->options[] = [$format, $quality];
         }
 
         if (empty($this->options)) {
@@ -42,5 +45,28 @@ final class FormatQuality extends AbstractOption
     public function data(): array
     {
         return array_merge(...$this->options);
+    }
+    
+    /**
+     * Add a quality setting for a specific format.
+     *
+     * @param string $format Image format
+     * @param int $quality Quality value (1-100)
+     *
+     * @return self
+     */
+    public function add(string $format, int $quality): self
+    {
+        $newOptions = [];
+        
+        // Copy existing options
+        foreach ($this->options as [$fmt, $qual]) {
+            $newOptions[$fmt] = $qual;
+        }
+        
+        // Add new option
+        $newOptions[$format] = $quality;
+        
+        return new self($newOptions);
     }
 }

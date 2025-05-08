@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Onliner\ImgProxy\Options;
 
+use Onliner\ImgProxy\Support\Color;
 use PHPUnit\Framework\TestCase;
 
 class BackgroundTest extends TestCase
@@ -13,7 +14,7 @@ class BackgroundTest extends TestCase
      */
     public function testCreate(string $color, string $expected): void
     {
-        $opt = new Background($color);
+        $opt = new Background(Color::fromRgbString($color));
 
         $this->assertSame($expected, (string) $opt);
         $this->assertEquals($opt, eval('return '.var_export($opt, true).';'));
