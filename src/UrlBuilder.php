@@ -197,12 +197,12 @@ class UrlBuilder
 
         $path = $this->buildPathWithPipelines($this->source($src, $format));
 
-        $signaturePath = $path;
         if ($this->isInfoEndpoint) {
-            $path = '/info' . $path;
+            // For /info endpoint, the structure is /info/signature/options/source
+            return sprintf('/info/%s%s', $this->signature($path), $path);
         }
 
-        return sprintf('/%s%s', $this->signature($signaturePath), $path);
+        return sprintf('/%s%s', $this->signature($path), $path);
     }
 
     /**
