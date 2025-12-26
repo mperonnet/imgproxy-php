@@ -42,17 +42,31 @@ class UrlEncrypterTest extends TestCase
         $this->assertMatchesRegularExpression('/^[A-Za-z0-9\-_]+$/', $encrypted);
     }
 
-    public function testDifferentEncryptionResults(): void
+    public function testDeterministicEncryptionResults(): void
     {
         $key = str_repeat('a', 64);
         $encrypter = new UrlEncrypter($key);
 
         $url = 'https://example.com/image.jpg';
 
-        // Encrypting the same URL twice should result in different strings
-        // due to the random IV
+        // Encrypting the same URL twice should result in the same string
+        // due to the deterministic HMAC-based IV (enables CDN caching)
         $encrypted1 = $encrypter->encrypt($url);
         $encrypted2 = $encrypter->encrypt($url);
+
+        $this->assertEquals($encrypted1, $encrypted2);
+    }
+
+    public function testDifferentUrlsProduceDifferentResults(): void
+    {
+        $key = str_repeat('a', 64);
+        $encrypter = new UrlEncrypter($key);
+
+        $url1 = 'https://example.com/image1.jpg';
+        $url2 = 'https://example.com/image2.jpg';
+
+        $encrypted1 = $encrypter->encrypt($url1);
+        $encrypted2 = $encrypter->encrypt($url2);
 
         $this->assertNotEquals($encrypted1, $encrypted2);
     }
