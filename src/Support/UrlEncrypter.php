@@ -50,11 +50,13 @@ class UrlEncrypter
         $padLength = $blockSize - (strlen($url) % $blockSize);
         $paddedUrl = $url . str_repeat(chr($padLength), $padLength);
 
-        // Generate a 16-byte IV
-        $iv = openssl_random_pseudo_bytes(16);
+        // Generate a deterministic 16-byte IV using HMAC of the URL
+        // This ensures same URL = same encrypted output = CDN cache works
+        // See: https://docs.imgproxy.net/usage/source_url_encryption#iv-generation
+        $iv = substr(hash_hmac('sha256', $url, $this->key, true), 0, 16);
 
-        // Encrypt the URL
-        $encryptedUrl = openssl_encrypt($paddedUrl, $this->getCipherMethod(), $this->key, OPENSSL_RAW_DATA, $iv);
+        // Encrypt the URL (OPENSSL_ZERO_PADDING disables auto-padding since we manually pad)
+        $encryptedUrl = openssl_encrypt($paddedUrl, $this->getCipherMethod(), $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
 
         if ($encryptedUrl === false) {
             throw new \RuntimeException('Failed to encrypt URL: ' . openssl_error_string());
